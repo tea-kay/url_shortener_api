@@ -1,7 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p #{input}
-  p #{fullUrl}
+  h1 Tim's RESTful API
+  h2 URL Shortener Microservice API
+  p.red  Example Usage:
+  code localhost:3000/https://stackoverflow.com/
+  br
+  p.red Expected Output is JSON:
+  code {
+  br
+  code  "original_url": https://stackoverflow.com/,
+  br
+  code  "short_url": localhost:3000/PPBqWA9
+  br
+  code }

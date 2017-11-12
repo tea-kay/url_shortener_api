@@ -1,5 +1,5 @@
 var express = require('express');
-var validUrl = require('valid-url');
+var mongoose = require('mongoose');
 
 var router = express.Router();
 
@@ -8,16 +8,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('(*)/:url', function(req, res, next) {
-  var { url } = req.params;
-  var fullUrl = "https://" + url;
-
-  if (validUrl.isUri(fullUrl)) {
-    res.render('index', { fullUrl });
-  } else {
-    res.json({ error: "Not a valid URL" });
-  }
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/url-shortener-api', {
+  useMongoClient: true
+})
 
 module.exports = router;
 

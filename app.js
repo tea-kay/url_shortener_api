@@ -27,6 +27,53 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 
+// handle link get request
+
+app.get('/*:url', function(req, res, next) {
+  var { url } = req.params;
+  var initialPath = req.param(0);
+  var inputUrl = initialPath + url
+
+  function generateShortId() {
+    var newId = shortid.generate();
+    return newId;
+  }
+
+  function createMongoRecord() {
+    var newShortId = generateShortId();
+
+  }
+
+  if (validUrl.isUri(inputUrl)) {
+    res.json({
+      success: "Valid URL",
+      input: inputUrl
+   });
+  } else {
+    res.json({
+      error: "Not a valid URL",
+      input: inputUrl
+   });
+  }
+});
+
+// connect and listen to mongodb server
+
+app.get('/fetch', (req, res) => {
+  Item.find({}, (err, items) => {
+    res.send({ success: true, items })
+  })
+})
+
+app.post('/add', (req, res) => {
+  const { item } = req.body
+  const newItem = new Item({ item })
+
+  newItem.save(err => {
+    res.send({ success: true, item: newItem.item })
+  })
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
