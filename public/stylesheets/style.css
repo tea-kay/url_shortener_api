@@ -7,6 +7,15 @@ a {
   color: #00B7FF;
 }
 
+.title {
+  text-decoration: underline;
+}
+
 .red {
   color: red;
+}
+
+.step {
+  font-weight: bold;
+  font-size: 1.3em;
 }

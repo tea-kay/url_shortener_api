@@ -212,6 +212,12 @@ etag@~1.8.0, etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
+express-redirect@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/express-redirect/-/express-redirect-1.2.2.tgz#6df98e99ee16ca2a1a7d6e4bb663dd6bf87e599c"
+  dependencies:
+    sanitize-arguments "~2.0"
+
 express@~4.15.5:
   version "4.15.5"
   resolved "https://registry.yarnpkg.com/express/-/express-4.15.5.tgz#670235ca9598890a5ae8170b83db722b842ed927"
@@ -574,6 +580,10 @@ right-align@^0.1.1:
 safe-buffer@5.1.1, safe-buffer@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
+
+sanitize-arguments@~2.0:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/sanitize-arguments/-/sanitize-arguments-2.0.3.tgz#5bd8340bcd5bf060cbee9a776186cc71bba8b84f"
 
 semver@^5.1.0:
   version "5.4.1"

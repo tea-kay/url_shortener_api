@@ -1,24 +1,27 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var shortid = require('shortid');
 var validUrl = require('valid-url');
+var Url = require('./model/url');
+var redirect = require("express-redirect");
 
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/url-shortener-api', {
+  useMongoClient: true
+})
 
 var index = require('./routes/index');
 
 var app = express();
+redirect(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,50 +32,53 @@ app.use('/', index);
 
 // handle link get request
 
-app.get('/*:url', function(req, res, next) {
+app.get('/:shortUrl', (req, res, next) => {
+  var { shortUrl } = req.params;
+
+  Url.findOne({ short_url: shortUrl }, (err, result) => {
+    if (err) return res.send({ err })
+    if (result) {
+        return res.redirect(result.original_url)
+    } else {
+      return res.json({
+        error: "Not a valid URL",
+        input: shortUrl
+      })
+    }
+  })
+})
+
+app.get('/*:url', (req, res, next) => {
   var { url } = req.params;
   var initialPath = req.param(0);
-  var inputUrl = initialPath + url
-
-  function generateShortId() {
-    var newId = shortid.generate();
-    return newId;
-  }
-
-  function createMongoRecord() {
-    var newShortId = generateShortId();
-
-  }
+  var inputUrl = initialPath + url;
 
   if (validUrl.isUri(inputUrl)) {
-    res.json({
-      success: "Valid URL",
-      input: inputUrl
-   });
+
+    Url.findOne({ original_url: inputUrl }, (err, result) => {
+      if (err) return res.send({ err })
+      if (!result) {
+        var newUrl = new Url({
+          original_url: inputUrl,
+          short_url: shortid.generate()
+        });
+
+        newUrl.save((err) => {
+          if (err) return res.send({ err });
+          return res.send({ newUrl })
+        })
+      } else {
+        return res.send(result);
+      }
+    })
   } else {
-    res.json({
+    return res.json({
       error: "Not a valid URL",
       input: inputUrl
    });
   }
 });
 
-// connect and listen to mongodb server
-
-app.get('/fetch', (req, res) => {
-  Item.find({}, (err, items) => {
-    res.send({ success: true, items })
-  })
-})
-
-app.post('/add', (req, res) => {
-  const { item } = req.body
-  const newItem = new Item({ item })
-
-  newItem.save(err => {
-    res.send({ success: true, item: newItem.item })
-  })
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
