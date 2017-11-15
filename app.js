@@ -7,7 +7,6 @@ var mongoose = require('mongoose');
 var shortid = require('shortid');
 var validUrl = require('valid-url');
 var Url = require('./model/url');
-var redirect = require("express-redirect");
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/url-shortener-api', {
   useMongoClient: true
@@ -16,7 +15,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/url-shortener-a
 var index = require('./routes/index');
 
 var app = express();
-redirect(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
